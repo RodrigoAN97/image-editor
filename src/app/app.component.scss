@@ -7,10 +7,12 @@
 }
 
 #container {
-  width: fit-content;
+  max-width: max-content;
+  max-height: max-content;
   position: relative;
   text-align: center;
   color: white;
+  margin: 10px 0;
 }
 
 a {
@@ -20,4 +22,29 @@ a {
   padding: 10px 15px;
   text-decoration: none;
   border-radius: 10px;
+}
+
+.draggableBox{
+  cursor: move;
+  width: 0;
+  height: 0;
+}
+
+.textBox {
+  padding: 20px;
+  display: inline-flex;
+  box-sizing: border-box;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+  z-index: 9;
+}
+
+.pointer {
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  // border-left: 50px solid transparent;
+  // border-right: 50px solid transparent;
+  // border-top: 100px solid red;
 }

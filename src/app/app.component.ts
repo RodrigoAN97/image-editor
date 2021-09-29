@@ -1,23 +1,64 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { CdkDragEnd } from '@angular/cdk/drag-drop';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnInit,
+} from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild('myCanvas', { static: false }) myCanvas!: ElementRef;
   public context!: CanvasRenderingContext2D;
   imgSrc: string = '';
   insertingText = false;
   taggingPeople = false;
   taggedPeople: any[] = [];
-  textToDraw: any[] = [
-    { text: '', color: '#000000', fontSize: 12, x: 0, y: 0 },
-  ];
-  @ViewChild('textValue') textValue!: ElementRef;
-  @ViewChild('fontSize') fontSize!: ElementRef;
-  @ViewChild('colorValue') colorValue!: ElementRef;
+  captionForm: FormGroup;
+  array!: FormArray;
+
+  constructor(private formBuilder: FormBuilder) {
+    this.captionForm = this.formBuilder.group({
+      array: this.formBuilder.array([this.createText()]),
+    });
+  }
+
+  createText() {
+    return this.formBuilder.group({
+      text: '',
+      coordinates: { x: 0, y: 0 },
+      fontSize: 12,
+      color: '#ffffff',
+      rotation: 0,
+      background: '#000000',
+      opacity: 1,
+    });
+  }
+
+  get fields(): FormArray {
+    return this.captionForm.get('array') as FormArray;
+  }
+
+  addItem() {
+    this.array = this.fields;
+    this.array.push(this.createText());
+    console.log(this.captionForm.value);
+  }
+
+  removeItem(index: number) {
+    this.array = this.fields;
+    this.array.removeAt(index);
+  }
+
+  onDragEnded(event: CdkDragEnd, index: number) {
+    this.fields.value[index].coordinates = event.source.getFreeDragPosition();
+  }
 
   imageChange(event: any) {
     var img = new Image();
@@ -32,62 +73,11 @@ export class AppComponent implements AfterViewInit {
   }
 
   getCursorPoint(event: any) {
-    if (this.insertingText) {
-      if (this.textToDraw[this.textToDraw.length - 1].text.length > 0) {
-        this.textToDraw[this.textToDraw.length - 1].x = event.offsetX;
-        this.textToDraw[this.textToDraw.length - 1].y = event.offsetY;
-        this.textToDraw[this.textToDraw.length] = {
-          text: '',
-          color: '#000000',
-          fontSize: 12,
-          x: 0,
-          y: 0,
-        };
-        this.resetTextInput();
-      }
-      console.log(this.textToDraw);
-      this.drawTextOver();
-    } else if (this.taggingPeople) {
+    if (this.taggingPeople) {
       this.taggedPeople[this.taggedPeople.length - 1].x = event.offsetX + 'px';
       this.taggedPeople[this.taggedPeople.length - 1].y = event.offsetY + 'px';
     }
     console.log(this.taggedPeople);
-  }
-
-  resetTextInput() {
-    this.textValue.nativeElement.value = '';
-    this.fontSize.nativeElement.value = 12;
-    this.colorValue.nativeElement.value = '#000000';
-  }
-
-  drawTextOver() {
-    var img = new Image();
-    let self = this;
-    img.onload = function () {
-      self.context.drawImage(img, 0, 0);
-      for (let i of self.textToDraw) {
-        self.context.font = `${i.fontSize}px Calibri`;
-        self.context.fillStyle = i.color;
-        self.context.fillText(i.text, i.x, i.y);
-      }
-    };
-    img.src = this.imgSrc;
-    console.log(this.myCanvas.nativeElement.toDataURL());
-  }
-
-  textChange(event: any) {
-    this.textToDraw[this.textToDraw.length - 1].text = event.target.value;
-    console.log(this.textToDraw);
-  }
-
-  fontSizeChange(event: any) {
-    this.textToDraw[this.textToDraw.length - 1].fontSize = event.target.value;
-    console.log(this.textToDraw);
-  }
-
-  colorChange(event: any) {
-    this.textToDraw[this.textToDraw.length - 1].color = event.target.value;
-    console.log(this.textToDraw);
   }
 
   personChange(event: any) {
@@ -95,17 +85,15 @@ export class AppComponent implements AfterViewInit {
     this.taggedPeople.push(newPerson);
   }
 
-  insertText() {
-    this.insertingText = !this.insertingText;
-    this.taggingPeople = false;
-  }
-
-  tagPeople() {
-    this.taggingPeople = !this.taggingPeople;
-    this.insertingText = false;
+  border(fontSize: number) {
+    return 12 + (fontSize - 12) / 8 <= 20 ? 12 + (fontSize - 12) / 5 : 20;
   }
 
   ngAfterViewInit(): void {
     this.context = this.myCanvas.nativeElement.getContext('2d');
+  }
+
+  ngOnInit() {
+    this.captionForm.valueChanges.subscribe((x) => console.log(x));
   }
 }

@@ -1,36 +1,78 @@
 <div id="editor">
   <input type="file" (change)="imageChange($event)" />
-  <button (click)="insertText()">Insert Text</button>
-  <button (click)="tagPeople()">Tag People</button>
-  <div id="insertText" *ngIf="insertingText">
-    <p>Click the image to write text</p>
-    <input
-      #textValue
-      type="text"
-      (input)="textChange($event)"
-      placeholder="text"
-    />
-    <input
-      #fontSize
-      type="number"
-      (input)="fontSizeChange($event)"
-      placeholder="fontSize"
-    />
-    <input #colorValue type="color" (change)="colorChange($event)" />
-  </div>
+  <button (click)="insertingText = !insertingText">Insert Text</button>
+  <button (click)="taggingPeople = !taggingPeople">Tag People</button>
+  <form [formGroup]="captionForm" *ngIf="insertingText">
+    <div
+      formArrayName="array"
+      *ngFor="let field of fields.controls; let i = index"
+    >
+      <div [formGroupName]="i">
+        <input
+          type="text"
+          placeholder="Text"
+          formControlName="text"
+          autocomplete="off"
+        />
+        <input
+          min="1"
+          type="number"
+          placeholder="Font Size"
+          formControlName="fontSize"
+        />
+        <input type="color" formControlName="color" />
+        <input type="range" min="0" max="360" formControlName="rotation" />
+        <input type="color" formControlName="background" />
+        <input
+          type="range"
+          min="0"
+          max="1"
+          formControlName="opacity"
+          step="0.05"
+        />
+      </div>
+      <button type="button" (click)="removeItem(i)">Delete</button>
+    </div>
+    <button type="button" (click)="addItem()">Add</button>
+  </form>
   <div id="tagPeople" *ngIf="taggingPeople">
     <p>Click the image to tag someone</p>
     <input (change)="personChange($event)" />
   </div>
 
-  <div id="container">
-    <a
-      target="_blank"
-      *ngFor="let p of taggedPeople"
-      [href]="p.profile"
-      [ngStyle]="{ top: p.y, left: p.x, position: 'absolute' }"
-      >{{ p.profile }}</a
+  <div id="container" #container>
+    <div
+      class="draggableBox"
+      [ngStyle]="{
+        color: caption.color,
+        transform: 'rotate(' + caption.rotation + 'deg)',
+        'font-size': caption.fontSize + 'px',
+        opacity: caption.opacity
+      }"
+      *ngFor="let caption of captionForm.value.array; let i = index"
+      cdkDrag
+      cdkDragBoundary="#container"
+      (cdkDragEnded)="onDragEnded($event, i)"
+      [cdkDragFreeDragPosition]="caption.coordinates"
     >
+      <div
+        [ngStyle]="{ background: caption.background }"
+        class="textBox"
+        *ngIf="caption.text.length > 0"
+      >
+        {{ caption.text }}
+      </div>
+      <div
+        [ngStyle]="{
+          'border-left': border(caption.fontSize) + 'px solid transparent',
+          'border-right': border(caption.fontSize) + 'px solid transparent',
+          'border-top':
+            border(caption.fontSize) + 'px solid ' + caption.background
+        }"
+        *ngIf="caption.text.length > 0"
+        class="pointer"
+      ></div>
+    </div>
     <canvas (click)="getCursorPoint($event)" #myCanvas></canvas>
   </div>
 </div>
