@@ -19,13 +19,18 @@ export class AppComponent implements AfterViewInit, OnInit {
   imgSrc: string = '';
   insertingText = false;
   taggingPeople = false;
-  taggedPeople: any[] = [];
+  // taggedPeople: any[] = [];
   captionForm: FormGroup;
-  array!: FormArray;
+  taggingForm: FormGroup;
+  captions!: FormArray;
+  tags!: FormArray;
 
   constructor(private formBuilder: FormBuilder) {
     this.captionForm = this.formBuilder.group({
-      array: this.formBuilder.array([this.createText()]),
+      captions: this.formBuilder.array([this.createText()]),
+    });
+    this.taggingForm = this.formBuilder.group({
+      people: this.formBuilder.array([this.createTag()]),
     });
   }
 
@@ -41,23 +46,51 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
-  get fields(): FormArray {
-    return this.captionForm.get('array') as FormArray;
+  createTag() {
+    return this.formBuilder.group({
+      profile: '',
+      coordinates: { x: 0, y: 0 },
+    });
   }
 
-  addItem() {
-    this.array = this.fields;
-    this.array.push(this.createText());
+  get captionFields(): FormArray {
+    return this.captionForm.get('captions') as FormArray;
+  }
+
+  get tagFields(): FormArray {
+    return this.taggingForm.get('people') as FormArray;
+  }
+
+  addCaption() {
+    this.captions = this.captionFields;
+    this.captions.push(this.createText());
     console.log(this.captionForm.value);
   }
 
-  removeItem(index: number) {
-    this.array = this.fields;
-    this.array.removeAt(index);
+  removeCaption(index: number) {
+    this.captions = this.captionFields;
+    this.captions.removeAt(index);
+  }
+
+  addTag() {
+    this.tags = this.tagFields;
+    this.tags.push(this.createTag());
+  }
+
+  removeTag(index: number) {
+    this.tags = this.tagFields;
+    this.tags.removeAt(index);
   }
 
   onDragEnded(event: CdkDragEnd, index: number) {
-    this.fields.value[index].coordinates = event.source.getFreeDragPosition();
+    this.captionFields.value[index].coordinates =
+      event.source.getFreeDragPosition();
+  }
+
+  onDragEndedTag(event: CdkDragEnd, index: number) {
+    this.tagFields.value[index].coordinates =
+      event.source.getFreeDragPosition();
+    console.log(this.tagFields.value);
   }
 
   imageChange(event: any) {
@@ -72,18 +105,18 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.imgSrc = img.src;
   }
 
-  getCursorPoint(event: any) {
-    if (this.taggingPeople) {
-      this.taggedPeople[this.taggedPeople.length - 1].x = event.offsetX + 'px';
-      this.taggedPeople[this.taggedPeople.length - 1].y = event.offsetY + 'px';
-    }
-    console.log(this.taggedPeople);
-  }
+  // getCursorPoint(event: any) {
+  //   if (this.taggingPeople) {
+  //     this.taggedPeople[this.taggedPeople.length - 1].x = event.offsetX + 'px';
+  //     this.taggedPeople[this.taggedPeople.length - 1].y = event.offsetY + 'px';
+  //   }
+  //   console.log(this.taggedPeople);
+  // }
 
-  personChange(event: any) {
-    let newPerson = { profile: event.target.value };
-    this.taggedPeople.push(newPerson);
-  }
+  // personChange(event: any) {
+  //   let newPerson = { profile: event.target.value };
+  //   this.taggedPeople.push(newPerson);
+  // }
 
   border(fontSize: number) {
     return 12 + (fontSize - 12) / 8 <= 20 ? 12 + (fontSize - 12) / 5 : 20;
@@ -95,5 +128,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.captionForm.valueChanges.subscribe((x) => console.log(x));
+    this.taggingForm.valueChanges.subscribe((x) => console.log(x));
   }
 }
