@@ -21,10 +21,19 @@ a {
   position: relative;
 }
 
-.draggableBox {
+.draggableCaption {
   cursor: move;
   width: 0;
   height: 0;
+  position: relative;
+  z-index: 999;
+}
+
+.draggableTag{
+  width: 0;
+  height: 0;
+  position: relative;
+  z-index: 999;
 }
 
 .textBox {
@@ -92,8 +101,35 @@ input[type="file"] {
 
 #initialButtons {
   display: flex;
+  justify-content: center;
 }
 
 #initialButtons * {
   margin-right: 10px;
+}
+
+#filters {
+  margin-top: 10px;
+}
+
+#filters > * {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: fit-content;
+}
+
+#imageHandler {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#imageHandler > *  {
+  margin-right: 30px;
+}
+
+#resetFilters{
+  margin: 10px auto;
 }

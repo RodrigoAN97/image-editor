@@ -23,8 +23,10 @@ export class AppComponent implements AfterViewInit, OnInit {
   imgSrc: string = '';
   insertingText = false;
   taggingPeople = false;
+  filteringImage = false;
   captionForm: FormGroup;
   taggingForm: FormGroup;
+  filtersForm!: FormGroup;
   captions!: FormArray;
   tags!: FormArray;
   tagsCoordinates: IDragPosition[] = [];
@@ -36,6 +38,20 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
     this.taggingForm = this.formBuilder.group({
       people: this.formBuilder.array([this.createTag()]),
+    });
+    this.createFiltersForm();
+  }
+
+  createFiltersForm() {
+    this.filtersForm = this.formBuilder.group({
+      grayscale: 0,
+      brightness: 100,
+      blur: 0,
+      contrast: 100,
+      invert: 0,
+      opacity: 100,
+      sepia: 0,
+      saturate: 1,
     });
   }
 
@@ -119,6 +135,11 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     this.context = this.myCanvas.nativeElement.getContext('2d');
+  }
+
+  getFilters() {
+    let filters = this.filtersForm.value;
+    return `grayscale(${filters.grayscale}%) brightness(${filters.brightness}%) blur(${filters.blur}px) contrast(${filters.contrast}%) invert(${filters.invert}%) opacity(${filters.opacity}%) sepia(${filters.sepia}%) saturate(${filters.saturate})`;
   }
 
   ngOnInit() {}
