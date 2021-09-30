@@ -5,6 +5,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  NbThemeModule,
+  NbLayoutModule,
+  NbInputModule,
+  NbSelectModule,
+  NbButtonModule,
+} from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,6 +22,13 @@ import { ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     DragDropModule,
     ReactiveFormsModule,
+    NoopAnimationsModule,
+    NbThemeModule.forRoot({ name: 'default' }),
+    NbLayoutModule,
+    NbEvaIconsModule,
+    NbInputModule,
+    NbSelectModule,
+    NbButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

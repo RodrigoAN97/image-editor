@@ -1,122 +1,194 @@
-<div id="editor">
-  <input type="file" (change)="imageChange($event)" />
-  <button (click)="insertingText = !insertingText">Insert Text</button>
-  <button (click)="taggingPeople = !taggingPeople">Tag People</button>
-  <form [formGroup]="captionForm" *ngIf="insertingText">
-    <b>Captions</b>
-    <div
-      formArrayName="captions"
-      *ngFor="let field of captionFields.controls; let i = index"
-    >
-      <div [formGroupName]="i">
-        <input
-          type="text"
-          placeholder="Text"
-          formControlName="text"
-          autocomplete="off"
-        />
-        <input
-          min="1"
-          type="number"
-          placeholder="Font Size"
-          formControlName="fontSize"
-        />
-        <input type="color" formControlName="color" />
-        <input type="range" min="0" max="360" formControlName="rotation" />
-        <input type="color" formControlName="background" />
-        <input
-          type="range"
-          min="0"
-          max="1"
-          formControlName="opacity"
-          step="0.05"
-        />
-        <select formControlName="fontFamily" placeholder="Font">
-        <option value="Calibri">Calibri</option>
-        <option value="Arial">Arial</option>
-        <option value="Verdana">Verdana</option>
-        <option value="Helvetica">Helvetica</option>
-        <option value="Tahoma">Tahoma</option>
-        <option value="Trebuchet MS">Trebuchet MS</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="Georgia">Georgia</option>
-        <option value="Garamond">Garamond</option>
-        <option value="Courier New">Courier New</option>
-        <option value="Brush Script MT">Brush Script MT</option>
-      </select>
-      </div>
-      <button type="button" (click)="removeCaption(i)">Delete</button>
-    </div>
-    <button type="button" (click)="addCaption()">Add</button>
-  </form>
-  <form [formGroup]="taggingForm" *ngIf="taggingPeople">
-    <b>Tags</b>
-    <div
-      formArrayName="people"
-      *ngFor="let field of tagFields.controls; let i = index"
-    >
-      <div [formGroupName]="i">
-        <input type="text" formControlName="profile" autocomplete="off" />
-      </div>
-      <button type="button" (click)="removeTag(i)">Delete</button>
-    </div>
-    <button type="button" (click)="addTag()">Add</button>
-  </form>
+<nb-layout>
+  <nb-layout-header fixed> Image Editor </nb-layout-header>
 
-  <div id="container" #container>
-    <div
-      class="draggableBox"
-      [ngStyle]="{
-        color: caption.color,
-        transform: 'rotate(' + caption.rotation + 'deg)',
-        'font-size': caption.fontSize + 'px',
-        opacity: caption.opacity,
-        'font-family': caption.fontFamily
-      }"
-      *ngFor="let caption of captionForm.value.captions; let i = index"
-      cdkDrag
-      cdkDragBoundary="#container"
-      (cdkDragEnded)="onDragEnded($event, i)"
-      [cdkDragFreeDragPosition]="textCoordinates[i]"
-    >
-      <div
-        [ngStyle]="{ background: caption.background }"
-        class="textBox"
-        *ngIf="caption.text.length > 0"
-      >
-        {{ caption.text }}
+  <nb-layout-column>
+    <div id="editor">
+      <div id="initialButtons">
+        <label class="fileUpload">
+          <input type="file" (change)="imageChange($event)" />
+          Upload Image
+        </label>
+        <button
+          nbButton
+          status="success"
+          (click)="insertingText = !insertingText"
+          [disabled]="imgSrc.length === 0"
+        >
+          Insert Text
+        </button>
+        <button
+          nbButton
+          status="success"
+          (click)="taggingPeople = !taggingPeople"
+          [disabled]="imgSrc.length === 0"
+        >
+          Tag People
+        </button>
       </div>
-      <div
-        [ngStyle]="{
-          'border-left': border(caption.fontSize) + 'px solid transparent',
-          'border-right': border(caption.fontSize) + 'px solid transparent',
-          'border-top':
-            border(caption.fontSize) + 'px solid ' + caption.background
-        }"
-        *ngIf="caption.text.length > 0"
-        class="pointer"
-      ></div>
-    </div>
-    <div
-      style="width: 0; height: 0"
-      *ngFor="let p of taggingForm.value.people; let i = index"
-      cdkDrag
-      cdkDragBoundary="#container"
-      (cdkDragEnded)="onDragEndedTag($event, i)"
-      [cdkDragFreeDragPosition]="tagsCoordinates[i]"
-    >
-      <a *ngIf="p.profile.length > 0" target="_blank" [href]="p.profile"
-        >{{ p.profile }}
-      </a>
-      <div *ngIf="p.profile.length > 0" class="handleDrag" cdkDragHandle>
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"
-          ></path>
-          <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
+      <form [formGroup]="captionForm" *ngIf="insertingText">
+        <b>Captions</b>
+        <div
+          formArrayName="captions"
+          *ngFor="let field of captionFields.controls; let i = index"
+        >
+          <div [formGroupName]="i" class="formGroup">
+            <input
+              nbInput
+              type="text"
+              placeholder="Text"
+              formControlName="text"
+              autocomplete="off"
+            />
+            <input
+              nbInput
+              min="1"
+              type="number"
+              placeholder="Font Size"
+              formControlName="fontSize"
+            />
+            <input
+              nbInput
+              type="color"
+              formControlName="color"
+              class="colorPicker"
+            />
+            <input
+              nbInput
+              type="range"
+              min="0"
+              max="360"
+              formControlName="rotation"
+            />
+            <input
+              nbInput
+              type="color"
+              formControlName="background"
+              class="colorPicker"
+            />
+            <input
+              nbInput
+              type="range"
+              min="0"
+              max="1"
+              formControlName="opacity"
+              step="0.05"
+            />
+            <nb-select formControlName="fontFamily" placeholder="Font">
+              <nb-option value="Calibri">Calibri</nb-option>
+              <nb-option value="Arial">Arial</nb-option>
+              <nb-option value="Verdana">Verdana</nb-option>
+              <nb-option value="Helvetica">Helvetica</nb-option>
+              <nb-option value="Tahoma">Tahoma</nb-option>
+              <nb-option value="Trebuchet MS">Trebuchet MS</nb-option>
+              <nb-option value="Times New Roman">Times New Roman</nb-option>
+              <nb-option value="Georgia">Georgia</nb-option>
+              <nb-option value="Garamond">Garamond</nb-option>
+              <nb-option value="Courier New">Courier New</nb-option>
+              <nb-option value="Brush Script MT">Brush Script MT</nb-option>
+            </nb-select>
+            <button
+              nbButton
+              status="danger"
+              type="button"
+              (click)="removeCaption(i)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+        <button nbButton status="danger" type="button" (click)="addCaption()">
+          Add
+        </button>
+      </form>
+      <form [formGroup]="taggingForm" *ngIf="taggingPeople">
+        <b>Tags</b>
+        <div
+          formArrayName="people"
+          *ngFor="let field of tagFields.controls; let i = index"
+        >
+          <div [formGroupName]="i" class="formGroup">
+            <input
+              nbInput
+              type="text"
+              formControlName="profile"
+              autocomplete="off"
+              placeholder="Profile"
+            />
+            <button
+              nbButton
+              status="danger"
+              type="button"
+              (click)="removeTag(i)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+        <button nbButton status="danger" type="button" (click)="addTag()">
+          Add
+        </button>
+      </form>
+
+      <div id="container" #container>
+        <div
+          class="draggableBox"
+          [ngStyle]="{
+            color: caption.color,
+            transform: 'rotate(' + caption.rotation + 'deg)',
+            'font-size': caption.fontSize + 'px',
+            opacity: caption.opacity,
+            'font-family': caption.fontFamily
+          }"
+          *ngFor="let caption of captionForm.value.captions; let i = index"
+          cdkDrag
+          cdkDragBoundary="#container"
+          (cdkDragEnded)="onDragEnded($event, i)"
+          [cdkDragFreeDragPosition]="textCoordinates[i]"
+        >
+          <div
+            [ngStyle]="{ background: caption.background }"
+            class="textBox"
+            *ngIf="caption.text.length > 0"
+          >
+            {{ caption.text }}
+          </div>
+          <div
+            [ngStyle]="{
+              'border-left': border(caption.fontSize) + 'px solid transparent',
+              'border-right': border(caption.fontSize) + 'px solid transparent',
+              'border-top':
+                border(caption.fontSize) + 'px solid ' + caption.background
+            }"
+            *ngIf="caption.text.length > 0"
+            class="pointer"
+          ></div>
+        </div>
+        <div
+          style="width: 0; height: 0"
+          *ngFor="let p of taggingForm.value.people; let i = index"
+          cdkDrag
+          cdkDragBoundary="#container"
+          (cdkDragEnded)="onDragEndedTag($event, i)"
+          [cdkDragFreeDragPosition]="tagsCoordinates[i]"
+        >
+          <a *ngIf="p.profile.length > 0" target="_blank" [href]="p.profile"
+            >{{ p.profile }}
+          </a>
+          <div *ngIf="p.profile.length > 0" class="handleDrag" cdkDragHandle>
+            <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"
+              ></path>
+              <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>
+          </div>
+        </div>
+        <canvas #myCanvas></canvas>
       </div>
     </div>
-    <canvas #myCanvas></canvas>
-  </div>
-</div>
+  </nb-layout-column>
+
+  <nb-layout-footer fixed>
+    <!-- Insert footer here -->
+  </nb-layout-footer>
+</nb-layout>

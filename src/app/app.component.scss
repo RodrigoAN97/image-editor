@@ -56,3 +56,44 @@ a {
 form {
   margin: 10px 0;
 }
+
+.formGroup {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.formGroup * {
+  margin-right: 10px;
+}
+
+.colorPicker {
+  height: inherit;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.fileUpload {
+  border-style: solid;
+  border-width: 0.0625rem;
+  text-transform: uppercase;
+  border-radius: 0.25rem;
+  display: inline-block;
+  padding: 0.6875rem 1.125rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1rem;
+  background-color: #00d68f;
+  border-color: #00d68f;
+  color: #fff;
+}
+
+#initialButtons {
+  display: flex;
+}
+
+#initialButtons * {
+  margin-right: 10px;
+}
