@@ -63,7 +63,7 @@
       cdkDrag
       cdkDragBoundary="#container"
       (cdkDragEnded)="onDragEnded($event, i)"
-      [cdkDragFreeDragPosition]="caption.coordinates"
+      [cdkDragFreeDragPosition]="textCoordinates[i]"
     >
       <div
         [ngStyle]="{ background: caption.background }"
@@ -89,7 +89,7 @@
       cdkDrag
       cdkDragBoundary="#container"
       (cdkDragEnded)="onDragEndedTag($event, i)"
-      [cdkDragFreeDragPosition]="p.coordinates"
+      [cdkDragFreeDragPosition]="tagsCoordinates[i]"
     >
       <a *ngIf="p.profile.length > 0" target="_blank" [href]="p.profile"
         >{{ p.profile }}
