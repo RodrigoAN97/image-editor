@@ -44,6 +44,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     return this.formBuilder.group({
       text: '',
       fontSize: 12,
+      fontFamily: 'Calibri',
       color: '#ffffff',
       rotation: 0,
       background: '#000000',

@@ -31,6 +31,19 @@
           formControlName="opacity"
           step="0.05"
         />
+        <select formControlName="fontFamily" placeholder="Font">
+        <option value="Calibri">Calibri</option>
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Helvetica">Helvetica</option>
+        <option value="Tahoma">Tahoma</option>
+        <option value="Trebuchet MS">Trebuchet MS</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Garamond">Garamond</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Brush Script MT">Brush Script MT</option>
+      </select>
       </div>
       <button type="button" (click)="removeCaption(i)">Delete</button>
     </div>
@@ -57,7 +70,8 @@
         color: caption.color,
         transform: 'rotate(' + caption.rotation + 'deg)',
         'font-size': caption.fontSize + 'px',
-        opacity: caption.opacity
+        opacity: caption.opacity,
+        'font-family': caption.fontFamily
       }"
       *ngFor="let caption of captionForm.value.captions; let i = index"
       cdkDrag
