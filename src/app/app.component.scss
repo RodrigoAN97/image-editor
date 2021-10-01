@@ -18,7 +18,7 @@ a {
   padding: 10px 15px;
   text-decoration: none;
   border-radius: 10px;
-  position: relative;
+  position: fixed;
 }
 
 .draggableCaption {
@@ -29,7 +29,7 @@ a {
   z-index: 999;
 }
 
-.draggableTag{
+.draggableTag {
   width: 0;
   height: 0;
   position: relative;
@@ -55,7 +55,7 @@ a {
 
 .handleDrag {
   position: absolute;
-  top: -30px;
+  top: -25px;
   color: #000;
   cursor: move;
   width: 24px;
@@ -126,10 +126,32 @@ input[type="file"] {
   justify-content: center;
 }
 
-#imageHandler > *  {
+#imageHandler > * {
   margin-right: 30px;
 }
 
-#resetFilters{
+#resetFilters {
   margin: 10px auto;
+}
+
+#crop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#croppedImage {
+  height: min-content;
+  width: min-content;
+  margin: 20px auto 0 auto;
+  text-align: center;
+  font-size: 20px;
+}
+
+#croppedImage > * {
+  padding-top: 10px;
+}
+
+#cropDone {
+  margin: 10px;
 }

@@ -11,7 +11,7 @@
         <button
           nbButton
           status="success"
-          (click)="insertingText = !insertingText"
+          (click)="addFeature('text')"
           [disabled]="imgSrc.length === 0"
         >
           Insert Text
@@ -19,7 +19,7 @@
         <button
           nbButton
           status="success"
-          (click)="taggingPeople = !taggingPeople"
+          (click)="addFeature('tag')"
           [disabled]="imgSrc.length === 0"
         >
           Tag People
@@ -27,10 +27,18 @@
         <button
           nbButton
           status="success"
-          (click)="filteringImage = !filteringImage"
+          (click)="addFeature('filter')"
           [disabled]="imgSrc.length === 0"
         >
           Filter
+        </button>
+        <button
+          nbButton
+          status="success"
+          (click)="cropImage()"
+          [disabled]="imgSrc.length === 0"
+        >
+          Crop
         </button>
       </div>
       <form [formGroup]="captionForm" *ngIf="insertingText">
@@ -227,11 +235,20 @@
               formControlName="saturate"
             />
           </label>
-          <button id="resetFilters" nbButton status="danger" (click)="createFiltersForm()">
+          <button
+            id="resetFilters"
+            nbButton
+            status="danger"
+            (click)="createFiltersForm()"
+          >
             Reset
           </button>
         </form>
-        <div id="container" #container>
+        <div
+          id="container"
+          #container
+          [ngStyle]="{ display: croppingImage ? 'none' : 'block' }"
+        >
           <div
             class="draggableCaption"
             [ngStyle]="{
@@ -288,6 +305,20 @@
             </div>
           </div>
           <canvas [ngStyle]="{ filter: getFilters() }" #myCanvas></canvas>
+        </div>
+        <div id="crop" *ngIf="croppingImage">
+          <button id="cropDone" nbButton status="danger" (click)="cropDone()">Done</button>
+          <image-cropper
+            *ngIf="croppingImage"
+            [imageURL]="imgSrc"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+            [maintainAspectRatio]="false"
+          ></image-cropper>
+          <div id="croppedImage">
+            <b>Cropped</b>
+            <img [src]="croppedImage" />
+          </div>
         </div>
       </div>
     </div>

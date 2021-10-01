@@ -14,6 +14,7 @@ import {
   NbButtonModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +30,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbInputModule,
     NbSelectModule,
     NbButtonModule,
+    ImageCropperModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

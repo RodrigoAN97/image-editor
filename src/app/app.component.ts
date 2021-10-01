@@ -7,6 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 interface IDragPosition {
   x: number;
@@ -21,9 +22,11 @@ export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild('myCanvas', { static: false }) myCanvas!: ElementRef;
   public context!: CanvasRenderingContext2D;
   imgSrc: string = '';
+  croppedImage: string = '';
   insertingText = false;
   taggingPeople = false;
   filteringImage = false;
+  croppingImage = false;
   captionForm: FormGroup;
   taggingForm: FormGroup;
   filtersForm!: FormGroup;
@@ -140,6 +143,56 @@ export class AppComponent implements AfterViewInit, OnInit {
   getFilters() {
     let filters = this.filtersForm.value;
     return `grayscale(${filters.grayscale}%) brightness(${filters.brightness}%) blur(${filters.blur}px) contrast(${filters.contrast}%) invert(${filters.invert}%) opacity(${filters.opacity}%) sepia(${filters.sepia}%) saturate(${filters.saturate})`;
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64 as string;
+    console.log(this.croppedImage);
+  }
+
+  cropDone() {
+    this.croppingImage = false;
+    var img = new Image();
+    let self = this;
+    img.onload = function () {
+      self.myCanvas.nativeElement.width = img.width;
+      self.myCanvas.nativeElement.height = img.height;
+      self.context.drawImage(img, 0, 0);
+    };
+    img.src = this.croppedImage;
+  }
+
+  cropImage() {
+    this.croppingImage = !this.croppingImage;
+    if (this.croppingImage) {
+      this.insertingText = false;
+      this.taggingPeople = false;
+      this.filteringImage = false;
+    }
+  }
+
+  addFeature(feature: string) {
+    if (this.croppingImage) {
+      if (confirm('Are you sure? You will lose your crop.')) {
+        this.handleCase(feature);
+        this.croppingImage = false;
+      }
+    } else {
+      this.handleCase(feature);
+    }
+  }
+
+  handleCase(feature: string) {
+    switch (feature) {
+      case 'text':
+        this.insertingText = true;
+        break;
+      case 'tag':
+        this.taggingPeople = true;
+        break;
+      case 'filter':
+        this.filteringImage = true;
+    }
   }
 
   ngOnInit() {}
