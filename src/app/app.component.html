@@ -40,6 +40,14 @@
         >
           Crop
         </button>
+        <button
+          [disabled]="imgSrc.length === 0"
+          nbButton
+          status="danger"
+          (click)="createImage()"
+        >
+          Download
+        </button>
       </div>
       <form [formGroup]="captionForm" *ngIf="insertingText">
         <b>Captions</b>
@@ -265,7 +273,10 @@
             [cdkDragFreeDragPosition]="textCoordinates[i]"
           >
             <div
-              [ngStyle]="{ background: caption.background }"
+              [ngStyle]="{
+                background: caption.background,
+                padding: caption.fontSize * 1.15 + 'px'
+              }"
               class="textBox"
               *ngIf="caption.text.length > 0"
             >
@@ -307,7 +318,9 @@
           <canvas [ngStyle]="{ filter: getFilters() }" #myCanvas></canvas>
         </div>
         <div id="crop" *ngIf="croppingImage">
-          <button id="cropDone" nbButton status="danger" (click)="cropDone()">Done</button>
+          <button id="cropDone" nbButton status="danger" (click)="cropDone()">
+            Done
+          </button>
           <image-cropper
             *ngIf="croppingImage"
             [imageURL]="imgSrc"
@@ -323,7 +336,6 @@
       </div>
     </div>
   </nb-layout-column>
-
   <nb-layout-footer fixed>
     <!-- Insert footer here -->
   </nb-layout-footer>

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-
+import axios from 'axios';
 interface IDragPosition {
   x: number;
   y: number;
@@ -34,6 +34,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   tags!: FormArray;
   tagsCoordinates: IDragPosition[] = [];
   textCoordinates: IDragPosition[] = [];
+  base64Canvas: any;
 
   constructor(private formBuilder: FormBuilder) {
     this.captionForm = this.formBuilder.group({
@@ -127,6 +128,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       self.myCanvas.nativeElement.width = img.width;
       self.myCanvas.nativeElement.height = img.height;
       self.context.drawImage(img, 0, 0);
+      self.base64Canvas = self.myCanvas.nativeElement.toDataURL();
     };
     img.src = URL.createObjectURL(event.target.files[0]);
     this.imgSrc = img.src;
@@ -193,6 +195,114 @@ export class AppComponent implements AfterViewInit, OnInit {
       case 'filter':
         this.filteringImage = true;
     }
+  }
+
+  async createImage() {
+    const payload = {
+      html: `<div id="container">${this.getCaptionsHTML()}${this.getTagsHTML()}<img src="${
+        this.base64Canvas
+      }"><div/>`,
+      css: `img {
+        filter: ${this.getFilters()};
+        }
+      
+      .draggableCaption {
+        width: 0;
+        height: 0;
+        position: relative;
+        z-index: 999;
+      }
+      
+      .textBox{
+        padding: 20px;
+        display: inline-flex;
+        box-sizing: border-box;
+        border-radius: 5px;
+        text-align: center;
+        position: relative;
+        z-index: 9;
+        width: max-content;
+      }
+      
+      .pointer {
+        width: 0;
+        height: 0;
+        margin-left: 5px;
+      }
+      
+      .draggableTag {
+        width: 0;
+        height: 0;
+        position: relative;
+        z-index: 999;
+      }
+      
+      a {
+        background-color: black;
+        color: white;
+        opacity: 0.5;
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 10px;
+        position: fixed;
+        cursor: default;
+      };`,
+    };
+
+    let headers = {
+      auth: {
+        username: 'b0db88e2-240c-4e82-ab7e-ac3f3293a0c7',
+        password: '1e238faa-a7ad-4aa1-a5d5-90b21739782c',
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const response = await axios.post(
+        'https://hcti.io/v1/image',
+        JSON.stringify(payload),
+        headers
+      );
+      console.log((response.data as any).url);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  getCaptionsHTML() {
+    let captions = this.captionForm.value.captions;
+    let draggableCaptions = '';
+    for (let i = 0; i < captions.length; i++) {
+      draggableCaptions += `<div class="draggableCaption" style="color:${
+        captions[i].color
+      };transform:rotate(${captions[i].rotation}deg);font-size:${
+        captions[i].fontSize
+      }px;opacity:${captions[i].opacity};font-family:${
+        captions[i].fontFamily
+      };top:${this.textCoordinates[i].y}px;left:${
+        this.textCoordinates[i].x
+      }px"><div class="textBox" style="background:${captions[i].background};padding:${captions[i].fontSize*1.15}">${
+        captions[i].text
+      }</div><div class="pointer" style="border-left:${this.border(
+        captions[i].fontSize
+      )}px solid transparent;border-right:${this.border(
+        captions[i].fontSize
+      )}px solid transparent;border-top:${this.border(
+        captions[i].fontSize
+      )}px solid ${captions[i].background}"></div></div>`;
+    }
+    return draggableCaptions;
+  }
+
+  getTagsHTML() {
+    let people = this.taggingForm.value.people;
+    let draggableTags = '';
+    for (let i = 0; i < people.length; i++) {
+      draggableTags += `<div class="draggableTag"><a style="top:${this.tagsCoordinates[i].y}px;left:${this.tagsCoordinates[i].x}px" href="${people[i].profile}">${people[i].profile}</a></div>`;
+    }
+
+    return draggableTags;
   }
 
   ngOnInit() {}
