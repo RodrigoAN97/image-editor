@@ -20,8 +20,10 @@ interface IDragPosition {
 })
 export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild('myCanvas', { static: false }) myCanvas!: ElementRef;
+  @ViewChild('download') link!: ElementRef;
   public context!: CanvasRenderingContext2D;
   imgSrc: string = '';
+  imgName: string = '';
   croppedImage: string = '';
   insertingText = false;
   taggingPeople = false;
@@ -132,6 +134,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     };
     img.src = URL.createObjectURL(event.target.files[0]);
     this.imgSrc = img.src;
+    this.imgName = event.target.files[0].name.split('.')[0];
   }
 
   border(fontSize: number) {
@@ -265,9 +268,21 @@ export class AppComponent implements AfterViewInit, OnInit {
         headers
       );
       console.log((response.data as any).url);
+      let downloadSrc = (response.data as any).url;
+      this.downloadImage(downloadSrc);
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async downloadImage(imageUrl: string) {
+    const image = await fetch(imageUrl);
+    const imageBlog = await image.blob();
+    const imageURL = URL.createObjectURL(imageBlog);
+
+    this.link.nativeElement.href = imageURL;
+    this.link.nativeElement.download = this.imgName;
+    this.link.nativeElement.click();
   }
 
   getCaptionsHTML() {
@@ -282,7 +297,9 @@ export class AppComponent implements AfterViewInit, OnInit {
         captions[i].fontFamily
       };top:${this.textCoordinates[i].y}px;left:${
         this.textCoordinates[i].x
-      }px"><div class="textBox" style="background:${captions[i].background};padding:${captions[i].fontSize*1.15}">${
+      }px"><div class="textBox" style="background:${
+        captions[i].background
+      };padding:${captions[i].fontSize * 1.15}">${
         captions[i].text
       }</div><div class="pointer" style="border-left:${this.border(
         captions[i].fontSize
