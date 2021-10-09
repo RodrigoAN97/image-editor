@@ -50,7 +50,7 @@
         >
           Download
         </button>
-        <a style="display: none;" #download>Download Link</a>
+        <a style="display: none" #download>Download Link</a>
       </div>
       <form [formGroup]="captionForm" *ngIf="insertingText">
         <b>Captions</b>
@@ -59,61 +59,83 @@
           *ngFor="let field of captionFields.controls; let i = index"
         >
           <div [formGroupName]="i" class="formGroup">
-            <input
-              nbInput
-              type="text"
-              placeholder="Text"
-              formControlName="text"
-              autocomplete="off"
-            />
-            <input
-              nbInput
-              min="1"
-              type="number"
-              placeholder="Font Size"
-              formControlName="fontSize"
-            />
-            <input
-              nbInput
-              type="color"
-              formControlName="color"
-              class="colorPicker"
-            />
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="360"
-              formControlName="rotation"
-            />
-            <input
-              nbInput
-              type="color"
-              formControlName="background"
-              class="colorPicker"
-            />
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="1"
-              formControlName="opacity"
-              step="0.05"
-            />
-            <nb-select formControlName="fontFamily" placeholder="Font">
-              <nb-option value="Calibri">Calibri</nb-option>
-              <nb-option value="Arial">Arial</nb-option>
-              <nb-option value="Verdana">Verdana</nb-option>
-              <nb-option value="Helvetica">Helvetica</nb-option>
-              <nb-option value="Tahoma">Tahoma</nb-option>
-              <nb-option value="Trebuchet MS">Trebuchet MS</nb-option>
-              <nb-option value="Times New Roman">Times New Roman</nb-option>
-              <nb-option value="Georgia">Georgia</nb-option>
-              <nb-option value="Garamond">Garamond</nb-option>
-              <nb-option value="Courier New">Courier New</nb-option>
-              <nb-option value="Brush Script MT">Brush Script MT</nb-option>
-            </nb-select>
+            <label>
+              <p>Text</p>
+              <input
+                nbInput
+                type="text"
+                placeholder="Text"
+                formControlName="text"
+                autocomplete="off"
+              />
+            </label>
+            <label>
+              <p>Font Size</p>
+              <input
+                nbInput
+                min="1"
+                type="number"
+                placeholder="Font Size"
+                formControlName="fontSize"
+              />
+            </label>
+            <label>
+              <p>Font Color</p>
+              <input
+                nbInput
+                type="color"
+                formControlName="color"
+                class="colorPicker"
+              />
+            </label>
+            <label>
+              <p>Rotation</p>
+              <input
+                nbInput
+                type="range"
+                min="0"
+                max="360"
+                formControlName="rotation"
+              />
+            </label>
+            <label>
+              <p>Bg Color</p>
+              <input
+                nbInput
+                type="color"
+                formControlName="background"
+                class="colorPicker"
+              />
+            </label>
+            <label>
+              <p>Opacity</p>
+              <input
+                nbInput
+                type="range"
+                min="0"
+                max="1"
+                formControlName="opacity"
+                step="0.05"
+              />
+            </label>
+            <label>
+              <p>Font</p>
+              <nb-select formControlName="fontFamily" placeholder="Font">
+                <nb-option value="Calibri">Calibri</nb-option>
+                <nb-option value="Arial">Arial</nb-option>
+                <nb-option value="Verdana">Verdana</nb-option>
+                <nb-option value="Helvetica">Helvetica</nb-option>
+                <nb-option value="Tahoma">Tahoma</nb-option>
+                <nb-option value="Trebuchet MS">Trebuchet MS</nb-option>
+                <nb-option value="Times New Roman">Times New Roman</nb-option>
+                <nb-option value="Georgia">Georgia</nb-option>
+                <nb-option value="Garamond">Garamond</nb-option>
+                <nb-option value="Courier New">Courier New</nb-option>
+                <nb-option value="Brush Script MT">Brush Script MT</nb-option>
+              </nb-select>
+            </label>
             <button
+              class="deleteButton"
               nbButton
               status="danger"
               type="button"
@@ -134,14 +156,18 @@
           *ngFor="let field of tagFields.controls; let i = index"
         >
           <div [formGroupName]="i" class="formGroup">
-            <input
-              nbInput
-              type="text"
-              formControlName="profile"
-              autocomplete="off"
-              placeholder="Profile"
-            />
+            <label>
+              <p>Profile</p>
+              <input
+                nbInput
+                type="text"
+                formControlName="profile"
+                autocomplete="off"
+                placeholder="Profile"
+              />
+            </label>
             <button
+              class="deleteButton"
               nbButton
               status="danger"
               type="button"
