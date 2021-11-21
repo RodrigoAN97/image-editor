@@ -21,14 +21,6 @@
         <button
           nbButton
           status="success"
-          (click)="addFeature('tag')"
-          [disabled]="imgSrc.length === 0"
-        >
-          Tag People
-        </button>
-        <button
-          nbButton
-          status="success"
           (click)="addFeature('filter')"
           [disabled]="imgSrc.length === 0"
         >
@@ -147,38 +139,6 @@
           </div>
         </div>
         <button nbButton status="danger" type="button" (click)="addCaption()">
-          Add
-        </button>
-      </form>
-      <form [formGroup]="taggingForm" *ngIf="taggingPeople">
-        <b>Tags</b>
-        <div
-          formArrayName="people"
-          *ngFor="let field of tagFields.controls; let i = index"
-        >
-          <div [formGroupName]="i" class="formGroup">
-            <label>
-              <p>Profile</p>
-              <input
-                nbInput
-                type="text"
-                formControlName="profile"
-                autocomplete="off"
-                placeholder="Profile"
-              />
-            </label>
-            <button
-              class="deleteButton"
-              nbButton
-              status="danger"
-              type="button"
-              (click)="removeTag(i)"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-        <button nbButton status="danger" type="button" (click)="addTag()">
           Add
         </button>
       </form>
@@ -324,26 +284,6 @@
               *ngIf="caption.text.length > 0"
               class="pointer"
             ></div>
-          </div>
-          <div
-            class="draggableTag"
-            *ngFor="let p of taggingForm.value.people; let i = index"
-            cdkDrag
-            cdkDragBoundary="#container"
-            (cdkDragEnded)="onDragEndedTag($event, i)"
-            [cdkDragFreeDragPosition]="tagsCoordinates[i]"
-          >
-            <a *ngIf="p.profile.length > 0" target="_blank" [href]="p.profile"
-              >{{ p.profile }}
-            </a>
-            <div *ngIf="p.profile.length > 0" class="handleDrag" cdkDragHandle>
-              <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"
-                ></path>
-                <path d="M0 0h24v24H0z" fill="none"></path>
-              </svg>
-            </div>
           </div>
           <canvas [ngStyle]="{ filter: getFilters() }" #myCanvas></canvas>
         </div>

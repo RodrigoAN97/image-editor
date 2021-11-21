@@ -28,15 +28,11 @@ export class AppComponent implements AfterViewInit, OnInit {
   imgName: string = '';
   croppedImage: string = '';
   insertingText = false;
-  taggingPeople = false;
   filteringImage = false;
   croppingImage = false;
   captionForm: FormGroup;
-  taggingForm: FormGroup;
   filtersForm!: FormGroup;
   captions!: FormArray;
-  tags!: FormArray;
-  tagsCoordinates: IDragPosition[] = [];
   textCoordinates: IDragPosition[] = [];
   base64Canvas: any;
   isLoading = false;
@@ -47,9 +43,6 @@ export class AppComponent implements AfterViewInit, OnInit {
   ) {
     this.captionForm = this.formBuilder.group({
       captions: this.formBuilder.array([this.createText()]),
-    });
-    this.taggingForm = this.formBuilder.group({
-      people: this.formBuilder.array([this.createTag()]),
     });
     this.createFiltersForm();
   }
@@ -80,19 +73,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
-  createTag() {
-    this.tagsCoordinates.push({ x: 0, y: 0 });
-    return this.formBuilder.group({
-      profile: '',
-    });
-  }
-
   get captionFields(): FormArray {
     return this.captionForm.get('captions') as FormArray;
-  }
-
-  get tagFields(): FormArray {
-    return this.taggingForm.get('people') as FormArray;
   }
 
   addCaption() {
@@ -108,25 +90,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
-  addTag() {
-    this.tags = this.tagFields;
-    this.tags.push(this.createTag());
-  }
-
-  removeTag(index: number) {
-    this.tags = this.tagFields;
-    this.tags.removeAt(index);
-    this.tagsCoordinates = this.tagsCoordinates.filter((_, i) => {
-      return index !== i;
-    });
-  }
-
   onDragEnded(event: CdkDragEnd, index: number) {
     this.textCoordinates[index] = event.source.getFreeDragPosition();
-  }
-
-  onDragEndedTag(event: CdkDragEnd, index: number) {
-    this.tagsCoordinates[index] = event.source.getFreeDragPosition();
   }
 
   imageChange(event: any) {
@@ -176,7 +141,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.croppingImage = !this.croppingImage;
     if (this.croppingImage) {
       this.insertingText = false;
-      this.taggingPeople = false;
       this.filteringImage = false;
     }
   }
@@ -197,9 +161,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       case 'text':
         this.insertingText = true;
         break;
-      case 'tag':
-        this.taggingPeople = true;
-        break;
       case 'filter':
         this.filteringImage = true;
     }
@@ -208,7 +169,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   async createImage() {
     this.isLoading = true;
     const payload = {
-      html: `<div id="container">${this.getCaptionsHTML()}${this.getTagsHTML()}<img src="${
+      html: `<div id="container">${this.getCaptionsHTML()}<img src="${
         this.base64Canvas
       }"><div/>`,
       css: `img {
@@ -237,13 +198,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         width: 0;
         height: 0;
         margin-left: 5px;
-      }
-      
-      .draggableTag {
-        width: 0;
-        height: 0;
-        position: relative;
-        z-index: 999;
       }
       
       a {
@@ -315,16 +269,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       )}px solid ${captions[i].background}"></div></div>`;
     }
     return draggableCaptions;
-  }
-
-  getTagsHTML() {
-    let people = this.taggingForm.value.people;
-    let draggableTags = '';
-    for (let i = 0; i < people.length; i++) {
-      draggableTags += `<div class="draggableTag"><a style="top:${this.tagsCoordinates[i].y}px;left:${this.tagsCoordinates[i].x}px" href="${people[i].profile}">${people[i].profile}</a></div>`;
-    }
-
-    return draggableTags;
   }
 
   ngOnInit() {}
