@@ -153,7 +153,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64 as string;
-    console.log(this.croppedImage);
   }
 
   cropDone() {
@@ -265,7 +264,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         JSON.stringify(payload),
         headers
       );
-      console.log((response.data as any).url);
       let downloadSrc = (response.data as any).url;
       this.downloadImage(downloadSrc);
     } catch (error) {
