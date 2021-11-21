@@ -10,6 +10,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
+import { NbToastrService } from '@nebular/theme';
 interface IDragPosition {
   x: number;
   y: number;
@@ -39,7 +40,10 @@ export class AppComponent implements AfterViewInit, OnInit {
   textCoordinates: IDragPosition[] = [];
   base64Canvas: any;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private toastrService: NbToastrService
+  ) {
     this.captionForm = this.formBuilder.group({
       captions: this.formBuilder.array([this.createText()]),
     });
@@ -267,6 +271,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       let downloadSrc = (response.data as any).url;
       this.downloadImage(downloadSrc);
     } catch (error) {
+      this.toastrService.danger(error, 'ERROR');
       console.error(error);
     }
   }
