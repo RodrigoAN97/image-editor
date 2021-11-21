@@ -39,6 +39,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   tagsCoordinates: IDragPosition[] = [];
   textCoordinates: IDragPosition[] = [];
   base64Canvas: any;
+  isLoading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -205,6 +206,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   async createImage() {
+    this.isLoading = true;
     const payload = {
       html: `<div id="container">${this.getCaptionsHTML()}${this.getTagsHTML()}<img src="${
         this.base64Canvas
@@ -273,6 +275,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     } catch (error) {
       this.toastrService.danger(error, 'ERROR');
       console.error(error);
+    } finally {
+      this.isLoading = false;
     }
   }
 

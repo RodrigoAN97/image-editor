@@ -44,6 +44,7 @@
         </button>
         <button
           [disabled]="imgSrc.length === 0"
+          [nbSpinner]="isLoading"
           nbButton
           status="danger"
           (click)="createImage()"
