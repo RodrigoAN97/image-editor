@@ -9,6 +9,7 @@ import {
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import axios from 'axios';
+import { environment } from 'src/environments/environment';
 interface IDragPosition {
   x: number;
   y: number;
@@ -253,10 +254,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     };
 
     let headers = {
-      auth: {
-        username: 'b0db88e2-240c-4e82-ab7e-ac3f3293a0c7',
-        password: '1e238faa-a7ad-4aa1-a5d5-90b21739782c',
-      },
+      auth: environment.HTMLToCSSAuth,
       headers: {
         'Content-Type': 'application/json',
       },
