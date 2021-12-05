@@ -273,17 +273,9 @@
           <label>
             <p>Font</p>
             <nb-select formControlName="fontFamily" placeholder="Font">
-              <nb-option value="Calibri">Calibri</nb-option>
-              <nb-option value="Arial">Arial</nb-option>
-              <nb-option value="Verdana">Verdana</nb-option>
-              <nb-option value="Helvetica">Helvetica</nb-option>
-              <nb-option value="Tahoma">Tahoma</nb-option>
-              <nb-option value="Trebuchet MS">Trebuchet MS</nb-option>
-              <nb-option value="Times New Roman">Times New Roman</nb-option>
-              <nb-option value="Georgia">Georgia</nb-option>
-              <nb-option value="Garamond">Garamond</nb-option>
-              <nb-option value="Courier New">Courier New</nb-option>
-              <nb-option value="Brush Script MT">Brush Script MT</nb-option>
+              <nb-option *ngFor="let font of fonts" [value]="font">{{
+                font
+              }}</nb-option>
             </nb-select>
           </label>
           <button
