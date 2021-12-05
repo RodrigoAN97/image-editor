@@ -4,307 +4,304 @@
   </nb-layout-header>
 
   <nb-layout-column>
-    <div id="editor">
-      <div id="initialButtons">
-        <label class="fileUpload">
-          <input type="file" (change)="imageChange($event)" />
-          Upload Image
-        </label>
-        <button
-          nbButton
-          status="success"
-          (click)="addFeature('text')"
-          [disabled]="imgSrc.length === 0"
-        >
-          Insert Text
-        </button>
-        <button
-          nbButton
-          status="success"
-          (click)="addFeature('filter')"
-          [disabled]="imgSrc.length === 0"
-        >
-          Filter
-        </button>
-        <button
-          nbButton
-          status="success"
-          (click)="cropImage()"
-          [disabled]="imgSrc.length === 0"
-        >
-          Crop
-        </button>
-        <button
-          [disabled]="imgSrc.length === 0"
-          [nbSpinner]="isLoading"
-          nbButton
-          status="danger"
-          (click)="createImage()"
-        >
-          Download
-        </button>
-        <a style="display: none" #download>Download Link</a>
-      </div>
-      <form [formGroup]="captionForm" *ngIf="insertingText">
-        <b>Captions</b>
+    <div id="initialButtons">
+      <label class="fileUpload">
+        <input type="file" (change)="imageChange($event)" />
+        Upload Image
+      </label>
+      <button
+        nbButton
+        status="success"
+        (click)="addFeature('text')"
+        [disabled]="imgSrc.length === 0"
+      >
+        Insert Text
+      </button>
+      <button
+        nbButton
+        status="success"
+        (click)="addFeature('filter')"
+        [disabled]="imgSrc.length === 0"
+      >
+        Filter
+      </button>
+      <button
+        nbButton
+        status="success"
+        (click)="cropImage()"
+        [disabled]="imgSrc.length === 0"
+      >
+        Crop
+      </button>
+      <button
+        [disabled]="imgSrc.length === 0"
+        [nbSpinner]="isLoading"
+        nbButton
+        status="danger"
+        (click)="createImage()"
+      >
+        Download
+      </button>
+      <a style="display: none" #download>Download Link</a>
+    </div>
+    <div id="imageHandler">
+      <div
+        id="container"
+        #container
+        [ngStyle]="{ display: croppingImage ? 'none' : 'block' }"
+      >
         <div
-          formArrayName="captions"
-          *ngFor="let field of captionFields.controls; let i = index"
-        >
-          <div [formGroupName]="i" class="formGroup">
-            <label>
-              <p>Text</p>
-              <input
-                nbInput
-                type="text"
-                placeholder="Text"
-                formControlName="text"
-                autocomplete="off"
-              />
-            </label>
-            <label>
-              <p>Font Size</p>
-              <input
-                nbInput
-                min="1"
-                type="number"
-                placeholder="Font Size"
-                formControlName="fontSize"
-              />
-            </label>
-            <label>
-              <p>Font Color</p>
-              <input
-                nbInput
-                type="color"
-                formControlName="color"
-                class="colorPicker"
-              />
-            </label>
-            <label>
-              <p>Rotation</p>
-              <input
-                nbInput
-                type="range"
-                min="0"
-                max="360"
-                formControlName="rotation"
-              />
-            </label>
-            <label>
-              <p>Bg Color</p>
-              <input
-                nbInput
-                type="color"
-                formControlName="background"
-                class="colorPicker"
-              />
-            </label>
-            <label>
-              <p>Opacity</p>
-              <input
-                nbInput
-                type="range"
-                min="0"
-                max="1"
-                formControlName="opacity"
-                step="0.05"
-              />
-            </label>
-            <label>
-              <p>Font</p>
-              <nb-select formControlName="fontFamily" placeholder="Font">
-                <nb-option value="Calibri">Calibri</nb-option>
-                <nb-option value="Arial">Arial</nb-option>
-                <nb-option value="Verdana">Verdana</nb-option>
-                <nb-option value="Helvetica">Helvetica</nb-option>
-                <nb-option value="Tahoma">Tahoma</nb-option>
-                <nb-option value="Trebuchet MS">Trebuchet MS</nb-option>
-                <nb-option value="Times New Roman">Times New Roman</nb-option>
-                <nb-option value="Georgia">Georgia</nb-option>
-                <nb-option value="Garamond">Garamond</nb-option>
-                <nb-option value="Courier New">Courier New</nb-option>
-                <nb-option value="Brush Script MT">Brush Script MT</nb-option>
-              </nb-select>
-            </label>
-            <button
-              class="deleteButton"
-              nbButton
-              status="danger"
-              type="button"
-              (click)="removeCaption(i)"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-        <button nbButton status="danger" type="button" (click)="addCaption()">
-          Add
-        </button>
-      </form>
-
-      <div id="imageHandler">
-        <form [formGroup]="filtersForm" id="filters" *ngIf="filteringImage">
-          <label>
-            Grayscale
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              formControlName="grayscale"
-            />
-          </label>
-          <label>
-            Brightness
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="200"
-              step="1"
-              formControlName="brightness"
-            />
-          </label>
-          <label>
-            Blur
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="5"
-              step="0.05"
-              formControlName="blur"
-            />
-          </label>
-          <label>
-            Contrast
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="200"
-              step="1"
-              formControlName="contrast"
-            />
-          </label>
-          <label>
-            Invert
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="100"
-              step="9"
-              formControlName="invert"
-            />
-          </label>
-          <label>
-            Opacity
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              formControlName="opacity"
-            />
-          </label>
-          <label>
-            Sepia
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              formControlName="sepia"
-            />
-          </label>
-          <label>
-            Saturate
-            <input
-              nbInput
-              type="range"
-              min="1"
-              max="10"
-              step="0.05"
-              formControlName="saturate"
-            />
-          </label>
-          <button
-            id="resetFilters"
-            nbButton
-            status="danger"
-            (click)="createFiltersForm()"
-          >
-            Reset
-          </button>
-        </form>
-        <div
-          id="container"
-          #container
-          [ngStyle]="{ display: croppingImage ? 'none' : 'block' }"
+          class="draggableCaption"
+          [ngStyle]="{
+            color: caption.color,
+            transform: 'rotate(' + caption.rotation + 'deg)',
+            'font-size': caption.fontSize + 'px',
+            opacity: caption.opacity,
+            'font-family': caption.fontFamily
+          }"
+          *ngFor="let caption of captionForm.value.captions; let i = index"
+          cdkDrag
+          cdkDragBoundary="#container"
+          (cdkDragEnded)="onDragEnded($event, i)"
+          [cdkDragFreeDragPosition]="textCoordinates[i]"
         >
           <div
-            class="draggableCaption"
             [ngStyle]="{
-              color: caption.color,
-              transform: 'rotate(' + caption.rotation + 'deg)',
-              'font-size': caption.fontSize + 'px',
-              opacity: caption.opacity,
-              'font-family': caption.fontFamily
+              background: caption.background,
+              padding: caption.fontSize * 1.15 + 'px'
             }"
-            *ngFor="let caption of captionForm.value.captions; let i = index"
-            cdkDrag
-            cdkDragBoundary="#container"
-            (cdkDragEnded)="onDragEnded($event, i)"
-            [cdkDragFreeDragPosition]="textCoordinates[i]"
+            class="textBox"
+            *ngIf="caption.text.length > 0"
           >
-            <div
-              [ngStyle]="{
-                background: caption.background,
-                padding: caption.fontSize * 1.15 + 'px'
-              }"
-              class="textBox"
-              *ngIf="caption.text.length > 0"
-            >
-              {{ caption.text }}
-            </div>
-            <div
-              [ngStyle]="{
-                'border-left':
-                  border(caption.fontSize) + 'px solid transparent',
-                'border-right':
-                  border(caption.fontSize) + 'px solid transparent',
-                'border-top':
-                  border(caption.fontSize) + 'px solid ' + caption.background
-              }"
-              *ngIf="caption.text.length > 0"
-              class="pointer"
-            ></div>
+            {{ caption.text }}
           </div>
-          <canvas [ngStyle]="{ filter: getFilters() }" #myCanvas></canvas>
+          <div
+            [ngStyle]="{
+              'border-left': border(caption.fontSize) + 'px solid transparent',
+              'border-right': border(caption.fontSize) + 'px solid transparent',
+              'border-top':
+                border(caption.fontSize) + 'px solid ' + caption.background
+            }"
+            *ngIf="caption.text.length > 0"
+            class="pointer"
+          ></div>
         </div>
-        <div id="crop" *ngIf="croppingImage">
-          <button id="cropDone" nbButton status="danger" (click)="cropDone()">
-            Done
-          </button>
-          <div id="cropSet">
-            <image-cropper
-              *ngIf="croppingImage"
-              [imageURL]="imgSrc"
-              format="png"
-              (imageCropped)="imageCropped($event)"
-              [maintainAspectRatio]="false"
-            ></image-cropper>
-            <nb-icon icon="arrowhead-right-outline"></nb-icon>
-            <img id="croppedImage" [src]="croppedImage" />
-          </div>
+        <canvas [ngStyle]="{ filter: getFilters() }" #myCanvas></canvas>
+      </div>
+      <div id="crop" *ngIf="croppingImage">
+        <button id="cropDone" nbButton status="danger" (click)="cropDone()">
+          Done
+        </button>
+        <div id="cropSet">
+          <image-cropper
+            *ngIf="croppingImage"
+            [imageURL]="imgSrc"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+            [maintainAspectRatio]="false"
+          ></image-cropper>
+          <nb-icon icon="arrowhead-right-outline"></nb-icon>
+          <img id="croppedImage" [src]="croppedImage" />
         </div>
       </div>
+      <form [formGroup]="filtersForm" id="filtersForm" *ngIf="filteringImage">
+        <label>
+          Grayscale
+          <input
+            nbInput
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            formControlName="grayscale"
+          />
+        </label>
+        <label>
+          Brightness
+          <input
+            nbInput
+            type="range"
+            min="0"
+            max="200"
+            step="1"
+            formControlName="brightness"
+          />
+        </label>
+        <label>
+          Blur
+          <input
+            nbInput
+            type="range"
+            min="0"
+            max="5"
+            step="0.05"
+            formControlName="blur"
+          />
+        </label>
+        <label>
+          Contrast
+          <input
+            nbInput
+            type="range"
+            min="0"
+            max="200"
+            step="1"
+            formControlName="contrast"
+          />
+        </label>
+        <label>
+          Invert
+          <input
+            nbInput
+            type="range"
+            min="0"
+            max="100"
+            step="9"
+            formControlName="invert"
+          />
+        </label>
+        <label>
+          Opacity
+          <input
+            nbInput
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            formControlName="opacity"
+          />
+        </label>
+        <label>
+          Sepia
+          <input
+            nbInput
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            formControlName="sepia"
+          />
+        </label>
+        <label>
+          Saturate
+          <input
+            nbInput
+            type="range"
+            min="1"
+            max="10"
+            step="0.05"
+            formControlName="saturate"
+          />
+        </label>
+        <button
+          id="resetFilters"
+          nbButton
+          status="danger"
+          (click)="createFiltersForm()"
+        >
+          Reset
+        </button>
+      </form>
     </div>
+    <form [formGroup]="captionForm" *ngIf="insertingText" id="captionsForm">
+      <hr class="divider"/>
+      <b>Captions</b>
+      <div
+        formArrayName="captions"
+        *ngFor="let field of captionFields.controls; let i = index"
+      >
+        <div [formGroupName]="i" class="formGroup">
+          <label>
+            <p>Text</p>
+            <input
+              nbInput
+              type="text"
+              placeholder="Text"
+              formControlName="text"
+              autocomplete="off"
+            />
+          </label>
+          <label>
+            <p>Font Size</p>
+            <input
+              nbInput
+              min="1"
+              type="number"
+              placeholder="Font Size"
+              formControlName="fontSize"
+            />
+          </label>
+          <label>
+            <p>Font Color</p>
+            <input
+              nbInput
+              type="color"
+              formControlName="color"
+              class="colorPicker"
+            />
+          </label>
+          <label>
+            <p>Rotation</p>
+            <input
+              nbInput
+              type="range"
+              min="0"
+              max="360"
+              formControlName="rotation"
+            />
+          </label>
+          <label>
+            <p>Bg Color</p>
+            <input
+              nbInput
+              type="color"
+              formControlName="background"
+              class="colorPicker"
+            />
+          </label>
+          <label>
+            <p>Opacity</p>
+            <input
+              nbInput
+              type="range"
+              min="0"
+              max="1"
+              formControlName="opacity"
+              step="0.05"
+            />
+          </label>
+          <label>
+            <p>Font</p>
+            <nb-select formControlName="fontFamily" placeholder="Font">
+              <nb-option value="Calibri">Calibri</nb-option>
+              <nb-option value="Arial">Arial</nb-option>
+              <nb-option value="Verdana">Verdana</nb-option>
+              <nb-option value="Helvetica">Helvetica</nb-option>
+              <nb-option value="Tahoma">Tahoma</nb-option>
+              <nb-option value="Trebuchet MS">Trebuchet MS</nb-option>
+              <nb-option value="Times New Roman">Times New Roman</nb-option>
+              <nb-option value="Georgia">Georgia</nb-option>
+              <nb-option value="Garamond">Garamond</nb-option>
+              <nb-option value="Courier New">Courier New</nb-option>
+              <nb-option value="Brush Script MT">Brush Script MT</nb-option>
+            </nb-select>
+          </label>
+          <button
+            class="deleteButton"
+            nbButton
+            status="danger"
+            type="button"
+            (click)="removeCaption(i)"
+          >
+            Delete
+          </button>
+        </div>
+        <hr class="divider"/>
+      </div>
+      <button nbButton status="danger" type="button" (click)="addCaption()">
+        Add
+      </button>
+    </form>
   </nb-layout-column>
   <nb-layout-footer fixed>
     <!-- Insert footer here -->
