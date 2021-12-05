@@ -94,6 +94,7 @@ input[type="file"] {
 #initialButtons {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 #initialButtons * {
@@ -116,10 +117,6 @@ input[type="file"] {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-#imageHandler > * {
-  margin-right: 30px;
 }
 
 #resetFilters {

@@ -11,10 +11,12 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
 import { NbToastrService } from '@nebular/theme';
+
 interface IDragPosition {
   x: number;
   y: number;
 }
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -98,12 +100,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     let self = this;
     img.onload = function () {
       const aspectRatio = img.width / img.height;
-      const width = 600;
+      const width = screen.width <= 600 ? screen.width - 25 : 600;
       const height = width / aspectRatio;
       self.myCanvas.nativeElement.width = width;
       self.myCanvas.nativeElement.height = height;
       self.context.drawImage(img, 0, 0, width, height);
-      // self.base64Canvas = self.myCanvas.nativeElement.toDataURL();
       self.imgSrc = self.myCanvas.nativeElement.toDataURL();
     };
     img.src = URL.createObjectURL(event.target.files[0]);
