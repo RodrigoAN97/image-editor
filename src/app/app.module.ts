@@ -14,6 +14,7 @@ import {
   NbButtonModule,
   NbToastrModule,
   NbSpinnerModule,
+  NbIconModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -33,6 +34,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     NbSelectModule,
     NbButtonModule,
     ImageCropperModule,
+    NbIconModule,
     NbSpinnerModule,
     NbToastrModule.forRoot(),
   ],

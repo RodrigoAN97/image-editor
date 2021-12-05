@@ -291,16 +291,16 @@
           <button id="cropDone" nbButton status="danger" (click)="cropDone()">
             Done
           </button>
-          <image-cropper
-            *ngIf="croppingImage"
-            [imageURL]="imgSrc"
-            format="png"
-            (imageCropped)="imageCropped($event)"
-            [maintainAspectRatio]="false"
-          ></image-cropper>
-          <div id="croppedImage">
-            <b>Cropped</b>
-            <img [src]="croppedImage" />
+          <div id="cropSet">
+            <image-cropper
+              *ngIf="croppingImage"
+              [imageURL]="imgSrc"
+              format="png"
+              (imageCropped)="imageCropped($event)"
+              [maintainAspectRatio]="false"
+            ></image-cropper>
+            <nb-icon icon="arrowhead-right-outline"></nb-icon>
+            <img id="croppedImage" [src]="croppedImage" />
           </div>
         </div>
       </div>

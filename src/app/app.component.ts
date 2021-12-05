@@ -34,7 +34,6 @@ export class AppComponent implements AfterViewInit, OnInit {
   filtersForm!: FormGroup;
   captions!: FormArray;
   textCoordinates: IDragPosition[] = [];
-  base64Canvas: any;
   isLoading = false;
 
   constructor(
@@ -98,13 +97,16 @@ export class AppComponent implements AfterViewInit, OnInit {
     var img = new Image();
     let self = this;
     img.onload = function () {
-      self.myCanvas.nativeElement.width = img.width;
-      self.myCanvas.nativeElement.height = img.height;
-      self.context.drawImage(img, 0, 0);
-      self.base64Canvas = self.myCanvas.nativeElement.toDataURL();
+      const aspectRatio = img.width / img.height;
+      const width = 600;
+      const height = width / aspectRatio;
+      self.myCanvas.nativeElement.width = width;
+      self.myCanvas.nativeElement.height = height;
+      self.context.drawImage(img, 0, 0, width, height);
+      // self.base64Canvas = self.myCanvas.nativeElement.toDataURL();
+      self.imgSrc = self.myCanvas.nativeElement.toDataURL();
     };
     img.src = URL.createObjectURL(event.target.files[0]);
-    this.imgSrc = img.src;
     this.imgName = event.target.files[0].name.split('.')[0];
   }
 
@@ -170,7 +172,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.isLoading = true;
     const payload = {
       html: `<div id="container">${this.getCaptionsHTML()}<img src="${
-        this.base64Canvas
+        this.imgSrc
       }"><div/>`,
       css: `img {
         filter: ${this.getFilters()};
