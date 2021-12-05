@@ -13,7 +13,7 @@
         nbButton
         status="success"
         (click)="addFeature('text')"
-        [disabled]="imgSrc.length === 0"
+        [disabled]="imgSrc.length === 0 || isLoading"
       >
         Insert Text
       </button>
@@ -21,7 +21,7 @@
         nbButton
         status="success"
         (click)="addFeature('filter')"
-        [disabled]="imgSrc.length === 0"
+        [disabled]="imgSrc.length === 0 || isLoading"
       >
         Filter
       </button>
@@ -29,13 +29,13 @@
         nbButton
         status="success"
         (click)="cropImage()"
-        [disabled]="imgSrc.length === 0"
+        [disabled]="imgSrc.length === 0 || isLoading"
       >
         Crop
       </button>
       <button
-        [disabled]="imgSrc.length === 0"
         [nbSpinner]="isLoading"
+        [disabled]="imgSrc.length === 0 || isLoading"
         nbButton
         status="danger"
         (click)="createImage()"
@@ -204,7 +204,7 @@
       </form>
     </div>
     <form [formGroup]="captionForm" *ngIf="insertingText" id="captionsForm">
-      <hr class="divider"/>
+      <hr class="divider" />
       <b>Captions</b>
       <div
         formArrayName="captions"
@@ -296,7 +296,7 @@
             Delete
           </button>
         </div>
-        <hr class="divider"/>
+        <hr class="divider" />
       </div>
       <button nbButton status="danger" type="button" (click)="addCaption()">
         Add
