@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 10px;
+  align-items: flex-end;
 }
 
 .formGroup * {
@@ -19,4 +20,9 @@
 #captionsForm {
   width: fit-content;
   margin: auto;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
 }
