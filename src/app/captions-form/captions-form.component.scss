@@ -1,0 +1,22 @@
+.formGroup {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.formGroup * {
+  margin-right: 10px;
+}
+
+.colorPicker {
+  height: inherit;
+}
+
+.divider {
+  border-top: 2px solid #000000;
+}
+
+#captionsForm {
+  width: fit-content;
+  margin: auto;
+}

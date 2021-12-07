@@ -54,20 +54,6 @@ form {
   margin: 10px 0;
 }
 
-.formGroup {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.formGroup * {
-  margin-right: 10px;
-}
-
-.colorPicker {
-  height: inherit;
-}
-
 input[type="file"] {
   display: none;
 }
@@ -98,28 +84,11 @@ input[type="file"] {
   margin-right: 10px;
 }
 
-#filtersForm {
-  margin-top: 10px;
-  margin-left: 15px;
-}
-
-#filtersForm > * {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  width: fit-content;
-}
-
 #imageHandler {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-}
-
-#resetFilters {
-  margin: 10px auto;
 }
 
 #crop {
@@ -171,13 +140,4 @@ image-cropper {
 nb-icon {
   font-size: 2.3rem;
   margin: auto 15px;
-}
-
-#captionsForm {
-  width: fit-content;
-  margin: auto;
-}
-
-.divider {
-  border-top: 2px solid #000000;
 }
