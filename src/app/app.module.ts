@@ -18,9 +18,10 @@ import {
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { CaptionsFormComponent } from './captions-form/captions-form.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, CaptionsFormComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

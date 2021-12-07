@@ -203,97 +203,12 @@
         </button>
       </form>
     </div>
-    <form [formGroup]="captionForm" *ngIf="insertingText" id="captionsForm">
-      <hr class="divider" />
-      <b>Captions</b>
-      <div
-        formArrayName="captions"
-        *ngFor="let field of captionFields.controls; let i = index"
-      >
-        <div [formGroupName]="i" class="formGroup">
-          <label>
-            <p>Text</p>
-            <input
-              nbInput
-              type="text"
-              placeholder="Text"
-              formControlName="text"
-              autocomplete="off"
-            />
-          </label>
-          <label>
-            <p>Font Size</p>
-            <input
-              nbInput
-              min="1"
-              type="number"
-              placeholder="Font Size"
-              formControlName="fontSize"
-            />
-          </label>
-          <label>
-            <p>Font Color</p>
-            <input
-              nbInput
-              type="color"
-              formControlName="color"
-              class="colorPicker"
-            />
-          </label>
-          <label>
-            <p>Rotation</p>
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="360"
-              formControlName="rotation"
-            />
-          </label>
-          <label>
-            <p>Bg Color</p>
-            <input
-              nbInput
-              type="color"
-              formControlName="background"
-              class="colorPicker"
-            />
-          </label>
-          <label>
-            <p>Opacity</p>
-            <input
-              nbInput
-              type="range"
-              min="0"
-              max="1"
-              formControlName="opacity"
-              step="0.05"
-            />
-          </label>
-          <label>
-            <p>Font</p>
-            <nb-select formControlName="fontFamily" placeholder="Font">
-              <nb-option *ngFor="let font of fonts" [value]="font">{{
-                font
-              }}</nb-option>
-            </nb-select>
-          </label>
-          <button
-            class="deleteButton"
-            nbButton
-            status="danger"
-            type="button"
-            (click)="removeCaption(i)"
-          >
-            Delete
-          </button>
-        </div>
-        <hr class="divider" />
-      </div>
-      <button nbButton status="danger" type="button" (click)="addCaption()">
-        Add
-      </button>
-    </form>
+    <app-captions-form
+      *ngIf="insertingText"
+      [captionForm]="captionForm"
+      (addCaptionEvent)="addCaption()"
+      (removeCaptionEvent)="removeCaption($event)"
+    ></app-captions-form>
   </nb-layout-column>
   <nb-layout-footer fixed>
     <!-- Insert footer here -->

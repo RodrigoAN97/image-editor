@@ -37,19 +37,6 @@ export class AppComponent implements AfterViewInit, OnInit {
   captions!: FormArray;
   textCoordinates: IDragPosition[] = [];
   isLoading = false;
-  fonts = [
-    'Calibri',
-    'Arial',
-    'Verdana',
-    'Helvetica',
-    'Tahoma',
-    'Trebuchet MS',
-    'Times New Roman',
-    'Georgia',
-    'Garamond',
-    'Courier New',
-    'Brush Script MT',
-  ];
 
   constructor(
     private formBuilder: FormBuilder,
